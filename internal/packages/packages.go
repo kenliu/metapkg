@@ -8,12 +8,13 @@ import (
 	"github.com/sblinch/kdl-go/document"
 )
 
+// TODO: make this configurable
 const DEFAULT_PACKAGE_MANAGER = "dnf"
 
 type Package struct {
 	Name           string
 	PackageManager string
-	Script         string
+	Arguments      []string
 }
 
 type Scriptdef struct {
@@ -52,6 +53,13 @@ func LoadMetapackage(file string) (*Metapackage, error) {
 			break
 		case "dnf":
 			println("found dnf node")
+			pkg, err := parseDnf(node)
+			if err != nil {
+				return nil, fmt.Errorf("error parsing dnf: %w", err)
+			}
+			metapackage.Packages = append(metapackage.Packages, *pkg)
+		case "script":
+			println("found script node")
 			break
 		case "scriptdef":
 			println("found scriptdef node")
@@ -72,14 +80,26 @@ func LoadMetapackage(file string) (*Metapackage, error) {
 	return metapackage, nil
 }
 
+func parseDnf(node *document.Node) (*Package, error) {
+	pkg := &Package{}
+	pkg.PackageManager = "dnf"
+	pkg.Name = node.Arguments[0].ValueString()
+	return pkg, nil
+}
 
-// func parseDnf(node *document.Node) (*Package, error) {
+func parseFlatpak(node *document.Node) (*Package, error) {
+	pkg := &Package{}
+	pkg.PackageManager = "flatpak"
+	pkg.Name = node.Arguments[0].ValueString()
+	return pkg, nil
+}
 
-// }
-
-// func parseFlatpak(node *document.Node) (*Package, error) {
-
-// }
+func parseScript(node *document.Node) (*Package, error) {
+	pkg := &Package{}
+	pkg.PackageManager = "script"
+	pkg.Name = node.Arguments[0].ValueString()
+	return pkg, nil
+}
 
 func parseDefaultPackageManager(node *document.Node) (*Package, error) {
 	//parse the case where there is a node without a named package manager
@@ -95,7 +115,7 @@ func parseDefaultPackageManager(node *document.Node) (*Package, error) {
 
 func parseScriptdef(node *document.Node) (*Scriptdef, error) {
 	scriptdef := &Scriptdef{
-		Name: node.Name.String(),
+		Name: node.Arguments[0].ValueString(),
 	}
 	for _, child := range node.Children {
 		if child.Name.String() == "cmd" {
