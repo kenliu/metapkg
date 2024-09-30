@@ -1,4 +1,4 @@
-package package_managers
+package dnf
 
 import (
 	"os"

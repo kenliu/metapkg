@@ -2,8 +2,8 @@ package engine
 
 import (
 	"fmt"
+	"github.com/kenliu/metapkg/internal/package_managers/dnf"
 
-	"github.com/kenliu/metapkg/internal/package_managers"
 	"github.com/kenliu/metapkg/internal/packages"
 )
 
@@ -12,7 +12,7 @@ func InstallPackages(m *packages.Metapackage) error {
 	for _, pkg := range m.Packages {
 		// if a package is not installed, install it
 		if pkg.PackageManager == "dnf" {
-			dnf := package_managers.DnfPackageState{}
+			dnf := dnf.DnfPackageState{}
 			installed, err := dnf.IsInstalled(pkg.Name, pkg.Arguments)
 			if err != nil {
 				return err

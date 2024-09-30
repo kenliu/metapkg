@@ -1,4 +1,4 @@
-package package_managers
+package dnf
 
 import (
 	"fmt"
@@ -63,7 +63,7 @@ func (d *DnfPackageState) Install(name string) error {
 	// if there is an error, return the error
 
 	// log the command to be executed
-	fmt.Printf("Executing command: dnf install %s\n", name)
+	fmt.Printf("Executing command: sudo dnf install %s\n", name)
 
 	cmd := exec.Command("sudo", append([]string{"dnf", "install", "-y", name})...)
 	var stdout, stderr strings.Builder
