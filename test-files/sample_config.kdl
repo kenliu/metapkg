@@ -1,11 +1,39 @@
+// bat
+// eza
+// flatpak "org.kde.filelight"
+// dnf "fzf"
+// flatpak "com.slack.Slack" 
+// flatpak "md.obsidian.Obsidian"
+// fp "com.todoist.Todoist"
+// script "vivaldi" 
+
+// The list of packages to install are in a list at the top of the file
+
+// A package entry consists of the name of the package (as used by the package manager)
+// followed by the name of the package manager to install the package with.
+// Packages will be installed in the order specified in this file.
+//
+// Note that in KDL file format, the first string argument after a node name is always enclosed in quotes.
+fzf "dnf"
+
+// The name of the package manager is optional. If the package manager is not specified then the default
+// package manager will be used.
 bat
 eza
-flatpak "org.kde.filelight"
-dnf "fzf"
-flatpak "com.slack.Slack" 
-flatpak "md.obsidian.Obsidian"
-fp "com.todoist.Todoist"
-script "vivaldi" 
+
+// A package name may be any valid string. In the case of flatpak, package names are "triples".
+org.kde.filelight "flatpak"
+com.slack.Slack "flatpak"
+
+# TODO show an example using flatpak origin
+md.obsidian.Obsidian "flatpak"
+com.todoist.Todoist "flatpak"
+
+# "script" is a special type of package manager for installing a package using a shell script
+# "script" packages must refer to a "scriptdef" block in the same file (see below)
+vivaldi "script"
+
+external-script "script" "shellfile.sh"
 
 // group "foo" {
 //   direnv
@@ -22,11 +50,22 @@ script "vivaldi"
 //   dnf "gh"
 // }
 
+// A "scriptdef" block contains a list of shell commands to install a package.
+// The name of the scriptdef block is the name of the package to install.
+// The package will be installed by executing the commands in the scriptdef block.
+// TODO discuss multi-line strings
 scriptdef "vivaldi" {
+  executable = "/usr/bin/vivaldi"
   "sudo dnf config-manager --add-repo https://repo.vivaldi.com/archive/vivaldi-fedora.repo"
 }
 
+
+// TODO multiline example
 scriptdef "gcloud" {
+    // Here is an example of a multiline shell command taken from:
+    // https://cloud.google.com/sdk/docs/install#rpm
+
+    // TODO discuss raw multi-line strings from kdl
     r#"sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo << EOM
 [google-cloud-cli]
 name=Google Cloud CLI
@@ -36,5 +75,10 @@ gpgcheck=1
 repo_gpgcheck=0
 gpgkey=https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 EOM"#
+
     "sudo dnf install google-cloud-cli"
+}
+
+scriptdef "external-script" {
+  file = "install-external-script.sh"
 }
