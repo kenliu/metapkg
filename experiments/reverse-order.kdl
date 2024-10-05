@@ -1,0 +1,10 @@
+
+
+bat
+eza
+org.kde.filelight "flatpak"
+fzf "dnf"
+com.slack.Slack "flatpak" 
+md.obsidian.Obsidian "flatpak flathub"
+com.todoist.Todoist "flatpak"
+vivaldi "flatpak"
