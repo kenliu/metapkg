@@ -18,7 +18,10 @@ func InstallPackages(m *packages.Metapackage) error {
 				return err
 			}
 			if !installed {
-				dnf.Install(pkg.Name)
+				err = dnf.Install(pkg.Name)
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}
