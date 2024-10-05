@@ -15,26 +15,26 @@ type Config struct {
 }
 
 var cli struct {
-	Config  string `help:"Config file path" default:"metapackage.conf" type:"path"`
+	Config  string `help:"Config file path" default:"metapkg.conf" type:"path"`
 	DryRun  bool   `help:"Print commands without executing" default:"false"`
 	Debug   bool   `help:"Print debug information" default:"false"`
 	Verbose bool   `help:"Print verbose information" default:"false"`
 	Quiet   bool   `help:"Suppress all output" default:"false"`
 
 	Install struct {
-		File string `help:"Metapackage file to use" default:"metapackage.kdl" type:"path"`
-	} `cmd help:"Install packages specified in metapackage.kdl"`
+		File string `help:"Metapkg file to use" default:"metapkg.kdl" type:"path"`
+	} `cmd help:"Install packages specified in metapkg.kdl"`
 
 	Outdated struct {
-		File string `help:"Metapackage file to use" default:"metapackage.kdl" type:"path"`
+		File string `help:"Metapkg file to use" default:"metapkg.kdl" type:"path"`
 	} `cmd help:"List outdated packages"`
 
-	Version struct{} `cmd help:"Print the version number of metapackage"`
+	Version struct{} `cmd help:"Print the version number of metapkg"`
 }
 
 func main() {
 	ctx := kong.Parse(&cli,
-		kong.Name("metapackage"),
+		kong.Name("metapkg"),
 		kong.Description("A tool to install packages using different package managers"),
 		kong.UsageOnError(),
 		kong.ConfigureHelp(kong.HelpOptions{
@@ -54,14 +54,14 @@ func main() {
 			os.Exit(1)
 		}
 	case "version":
-		fmt.Println("metapackage v0.1")
+		fmt.Println("metapkg v0.1")
 	}
 }
 
 func install(file string) error {
 	metapackage, err := packages.LoadMetapackageFile(file)
 	if err != nil {
-		return fmt.Errorf("error loading metapackage: %w", err)
+		return fmt.Errorf("error loading metapkg file: %w", err)
 	}
 	return engine.InstallPackages(metapackage)
 }
@@ -69,7 +69,7 @@ func install(file string) error {
 func outdated(file string) error {
 	metapackage, err := packages.LoadMetapackageFile(file)
 	if err != nil {
-		return fmt.Errorf("error loading metapackage: %w", err)
+		return fmt.Errorf("error loading metapkg file: %w", err)
 	}
 	return engine.ListOutdatedPackages(metapackage)
 }
