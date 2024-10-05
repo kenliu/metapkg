@@ -62,7 +62,7 @@ func LoadMetapackageFile(file string) (*Metapackage, error) {
 			metapackage.Scriptdefs[scriptdef.Name] = *scriptdef
 		default:
 			pkg := &Package{}
-			
+
 			// we know the node is a package manager because it's not a script or scriptdef
 			// so we can parse the first argument as the package manager name
 			// and the nodename as the package name
@@ -174,6 +174,8 @@ func parseScriptdef(node *document.Node) (*Scriptdef, error) {
 			if len(child.Arguments) > 0 {
 				scriptdef.Commands = append(scriptdef.Commands, child.Arguments[0].ValueString())
 			}
+		} else {
+			scriptdef.Commands = append(scriptdef.Commands, child.Name.String())
 		}
 	}
 	return scriptdef, nil
