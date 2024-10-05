@@ -25,7 +25,31 @@ To keep things simple, metapkg does not:
 
 ## 🚀 Getting Started
 
-[Installation instructions coming soon]
+To get started with metapkg, follow these steps to download the Go source and build it:
+
+1. Ensure you have Go installed on your system (version 1.16 or later is recommended).
+
+2. Clone the repository:
+   ```
+   git clone https://github.com/kenliu/metapkg.git
+   cd metapkg
+   ```
+
+3. Build the project:
+   ```
+   go build -o bin ./...
+   ```
+
+   This command will compile all packages in the project and its subdirectories, creating an executable named `metapkg` in the `bin` directory.
+
+4. (Optional) Add the bin directory to your PATH for easier access:
+   ```
+   export PATH=$PATH:$(pwd)/bin
+   ```
+
+   You can add this line to your shell configuration file (e.g., `.bashrc`, `.zshrc`) to make it permanent.
+
+Now you can run metapkg by executing `./bin/metapkg` from the project directory, or simply `metapkg` if you've added it to your PATH.
 
 ## 📘 Usage
 
