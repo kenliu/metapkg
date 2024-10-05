@@ -179,7 +179,7 @@ foo
 }
 
 func TestLoadMetapackage(t *testing.T) {
-	metapackage, err := LoadMetapackage("../../test-files/sample_config.kdl")
+	metapackage, err := LoadMetapackageFile("../../test-files/sample_config.kdl")
 	if err != nil {
 		t.Fatalf("Failed to load metapackage: %v", err)
 	}
