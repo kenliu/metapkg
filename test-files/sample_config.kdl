@@ -24,8 +24,10 @@ com.todoist.Todoist "flatpak"
 // "script" packages must refer to a "scriptdef" block in the same file (see below)
 vivaldi "script"
 
+// TODO future syntax (not yet supported)
 //external-script "script" "shellfile.sh"
 
+// TODO future syntax (not yet supported)
 // group "fun" {
 //   direnv
 //   gcloud "script"
@@ -46,12 +48,13 @@ vivaldi "script"
 // The package will be installed by executing the commands in the scriptdef block.
 // TODO discuss multi-line strings
 scriptdef "vivaldi" {
+  // TODO future syntax (not yet supported)
 //  executable "/usr/bin/vivaldi"
   "sudo dnf config-manager --add-repo https://repo.vivaldi.com/archive/vivaldi-fedora.repo"
 }
 
 
-// TODO multiline example
+// TODO explain multiline example
 scriptdef "gcloud" {
     // Here is an example of a multiline shell command taken from:
     // https://cloud.google.com/sdk/docs/install#rpm
@@ -70,6 +73,7 @@ EOM"#
     "sudo dnf install google-cloud-cli"
 }
 
+// TODO future syntax (not yet supported)
 // scriptdef "external-script" {
 //   file "install-external-script.sh"
 // }
