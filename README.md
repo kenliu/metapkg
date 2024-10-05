@@ -11,7 +11,6 @@ A lightweight, local package management tool for managing packages across differ
 - 💻 Local package installation
 - 🤝 Compatibility with existing system package managers
 - 📘 Simple configuration file
-- 🔄 Install package updates (use your system package manager for this)
 - 🧪 Handle scripted installations using system shell commands
 
 ## ⚠️ Limitations
