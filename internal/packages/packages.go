@@ -28,7 +28,8 @@ type Metapackage struct {
 }
 
 func LoadMetapackageFile(file string) (*Metapackage, error) {
-	file = "/home/kenliu/code/metapkg/bin/metapkg.kdl"
+	//uncomment this to test with the example metapkg file while debugging in VSCode
+	//file = "/home/kenliu/code/metapkg/bin/metapkg.kdl"
 	println("Loading metapkg file")
 	println("====================")
 	println("Loading file: " + file)
