@@ -56,7 +56,7 @@ func (f *FlatpakPackageState) Install(name string) error {
 	if err != nil {
 		// Check if the error message indicates no remote was chosen
 		if strings.Contains(stderrStr, "No remote chosen to resolve matches") {
-			// If no remote was chosen, try installing with flathub remote
+			// If no remote was chosen, try installing with flathub remote	
 			fmt.Println("No remote specified. Attempting to install from Flathub...")
 			fmt.Println("To specify the remote, add the remote name as an additional argument in the metapkg file. For example:")
 			fmt.Printf("  %s \"flatpak\" \"fedora\"\n", name)
