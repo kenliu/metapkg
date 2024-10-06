@@ -52,10 +52,42 @@ Now you can run metapkg by executing `./bin/metapkg` from the project directory,
 
 ## 📘 Usage
 
-[Basic usage instructions and examples will be added here]
+To get started, create a metapkg file called `metapkg.kdl` in the same directory as the `metapkg` executable. You can use this simple example metapkg file to get started:
+
+```
+cowsay
+sl
+htop
+```
+
+Then, run the following command to install the packages:
+
+```
+./bin/metapkg install
+```
+
+This will install the `cowsay`, `sl`, and `htop` packages using the default package manager for your system.
+
+Currently, metapkg supports the following package managers:
+
+- `dnf`
+- `flatpak`
+
+If you want to use a different package manager to install a package, you can specify the package manager and any additional arguments as follows:
+
+```
+cowsay
+sl
+htop
+org.kde.filelight "flatpak" "flathub"
+```
+
+This will additionally install the `org.kde.filelight` package using the `flatpak` package manager with the `flathub` remote.
+   
+This is just a simple example. You see a more complete example in the [sample_config.kdl](test-files/sample_config.kdl) file.
 
 ## 🤝 Contributing
-      
+
 Contributions are welcome! If you have ideas for improvements or have found a bug, please feel free to open an issue or submit a pull request.
 
 ## 📜 License
