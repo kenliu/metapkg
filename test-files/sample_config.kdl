@@ -16,9 +16,9 @@ eza
 org.kde.filelight "flatpak"
 com.slack.Slack "flatpak"
 
-// TODO show an example using flatpak origin
-md.obsidian.Obsidian "flatpak"
-com.todoist.Todoist "flatpak"
+// Some package managers support additional options. For flatpak, a remote name is optional, but if specified, it will be passed to the package manager.
+md.obsidian.Obsidian "flatpak" "flathub"
+com.todoist.Todoist "flatpak" "fedora"
 
 // "script" is a special type of package manager for installing a package using a shell script
 // "script" packages must refer to a "scriptdef" block in the same file (see below)
