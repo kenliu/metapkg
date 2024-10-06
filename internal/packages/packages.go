@@ -28,6 +28,10 @@ type Metapackage struct {
 }
 
 func LoadMetapackageFile(file string) (*Metapackage, error) {
+	println("Loading metapkg file")
+	println("====================")
+	println("Loading file: " + file)
+
 	// Open the file
 	f, err := os.Open(file)
 	if err != nil {
@@ -56,7 +60,7 @@ func LoadMetapackageFile(file string) (*Metapackage, error) {
 		case "scriptdef":
 			println("found scriptdef node")
 			scriptdef, err := parseScriptdef(node)
-					if err != nil {
+			if err != nil {
 				return nil, fmt.Errorf("error parsing scriptdef: %w", err)
 			}
 			metapackage.Scriptdefs[scriptdef.Name] = *scriptdef
