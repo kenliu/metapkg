@@ -83,7 +83,7 @@ org.kde.filelight "flatpak" "flathub"
 ```
 
 This will additionally install the `org.kde.filelight` package using the `flatpak` package manager with the `flathub` remote.
-   
+
 This is just a simple example. You see a more complete example in the [sample_config.kdl](test-files/sample_config.kdl) file.
 
 ## 🤝 Contributing
