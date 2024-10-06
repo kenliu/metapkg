@@ -26,7 +26,7 @@ To keep things simple, metapkg does not:
 
 To get started with metapkg, follow these steps to download the Go source and build it:
 
-1. Ensure you have Go installed on your system (version 1.16 or later is recommended).
+1. Ensure you have Go installed on your system (version 1.23 or later is recommended).
 
 2. Clone the repository:
    ```
@@ -55,7 +55,7 @@ Now you can run metapkg by executing `./bin/metapkg` from the project directory,
 [Basic usage instructions and examples will be added here]
 
 ## 🤝 Contributing
-
+      
 Contributions are welcome! If you have ideas for improvements or have found a bug, please feel free to open an issue or submit a pull request.
 
 ## 📜 License
