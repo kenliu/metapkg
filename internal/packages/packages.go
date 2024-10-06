@@ -28,6 +28,7 @@ type Metapackage struct {
 }
 
 func LoadMetapackageFile(file string) (*Metapackage, error) {
+	file = "/home/kenliu/code/metapkg/bin/metapkg.kdl"
 	println("Loading metapkg file")
 	println("====================")
 	println("Loading file: " + file)
@@ -179,7 +180,7 @@ func parseScriptdef(node *document.Node) (*Scriptdef, error) {
 				scriptdef.Commands = append(scriptdef.Commands, child.Arguments[0].ValueString())
 			}
 		} else {
-			scriptdef.Commands = append(scriptdef.Commands, child.Name.String())
+			scriptdef.Commands = append(scriptdef.Commands, child.Name.ValueString())
 		}
 	}
 	return scriptdef, nil

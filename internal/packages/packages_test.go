@@ -105,16 +105,13 @@ foo "script"
 	}
 }
 
-
-
-
 func TestParseScriptdef(t *testing.T) {
-	t.Skip("Skipping TestParseScriptdef")	
-
-	// Define a small KDL snippet
+	// Define a KDL snippet with various command types
 	kdlString := `
-scriptdef "foo" {
-	"echo 'hello'"
+scriptdef "test_script" {
+	cmd "echo 'hello'"
+	"ls -la"
+	cmd "pwd"
 }
 `
 
@@ -136,16 +133,24 @@ scriptdef "foo" {
 	}
 
 	// Check the parsed scriptdef details
-	if scriptdef.Name != "foo" {
-		t.Errorf("Expected scriptdef name 'foo', got '%s'", scriptdef.Name)
+	if scriptdef.Name != "test_script" {
+		t.Errorf("Expected scriptdef name 'test_script', got '%s'", scriptdef.Name)
 	}
 
-	if len(scriptdef.Commands) != 1 {
-		t.Errorf("Expected 1 command, got %d", len(scriptdef.Commands))
+	expectedCommands := []string{
+		"echo 'hello'",
+		"ls -la",
+		"pwd",
 	}
 
-	if scriptdef.Commands[0] != "echo 'hello'" {
-		t.Errorf("Expected command 'echo 'hello'', got '%s'", scriptdef.Commands[0])
+	if len(scriptdef.Commands) != len(expectedCommands) {
+		t.Errorf("Expected %d commands, got %d", len(expectedCommands), len(scriptdef.Commands))
+	}
+
+	for i, cmd := range scriptdef.Commands {
+		if cmd != expectedCommands[i] {
+			t.Errorf("Expected command '%s', got '%s'", expectedCommands[i], cmd)
+		}
 	}
 }
 

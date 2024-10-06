@@ -41,7 +41,7 @@ func InstallPackages(m *packages.Metapackage) error {
 				}
 			}
 		} else if pkg.PackageManager == "script" {
-			script := script.ScriptPackageState{}
+			script := script.NewScriptPackageState(m.Scriptdefs[pkg.Name])
 			installed, err := script.IsInstalled(pkg.Name, pkg.Arguments)
 			if err != nil {
 				return err
