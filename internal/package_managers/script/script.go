@@ -95,6 +95,12 @@ func (s *ScriptPackageState) Install(name string) error {
 	return nil
 }
 
+func (s *ScriptPackageState) IsOutdated(name string, arguments []string) (bool, error) {
+	// For script-based installations, we don't have a way to check if a package is outdated
+	// so we'll just return false
+	return false, nil
+}
+
 // whichCommand checks if a command is in the PATH using the `which` command
 func whichCommand(name string) (bool, error) {
 	// if it returns 0, then it's installed

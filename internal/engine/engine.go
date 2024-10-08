@@ -7,53 +7,39 @@ import (
 	"github.com/kenliu/metapkg/internal/package_managers/script"
 
 	"github.com/kenliu/metapkg/internal/packages"
+	"github.com/kenliu/metapkg/internal/package_managers"
 )
 
 func InstallPackages(m *packages.Metapackage) error {
-	println()
-	println("Installing packages")
+	println("\nInstalling packages")
 	println("===================")
-	//iterate over each package, checking if each one is installed first
+
 	for _, pkg := range m.Packages {
-		// if a package is not installed, install it
-		if pkg.PackageManager == "dnf" {
-			dnf := dnf.DnfPackageState{}
-			installed, err := dnf.IsInstalled(pkg.Name, pkg.Arguments)
-			if err != nil {
+		var packageState package_managers.PackageState
+
+		switch pkg.PackageManager {
+		case "dnf":
+			packageState = &dnf.DnfPackageState{}
+		case "flatpak":
+			packageState = &flatpak.FlatpakPackageState{}
+		case "script":
+			packageState = script.NewScriptPackageState(m.Scriptdefs[pkg.Name])
+		default:
+			return fmt.Errorf("unsupported package manager: %s", pkg.PackageManager)
+		}
+
+		installed, err := packageState.IsInstalled(pkg.Name, pkg.Arguments)
+		if err != nil {
+			return err
+		}
+
+		if !installed {
+			if err := packageState.Install(pkg.Name); err != nil {
 				return err
-			}
-			if !installed {
-					err = dnf.Install(pkg.Name)
-				if err != nil {
-					return err
-				}
-			}
-		} else if pkg.PackageManager == "flatpak" {
-			flatpak := flatpak.FlatpakPackageState{}
-			installed, err := flatpak.IsInstalled(pkg.Name, pkg.Arguments)
-			if err != nil {
-				return err
-			}
-			if !installed {
-				err = flatpak.Install(pkg.Name)
-				if err != nil {
-					return err
-				}
-			}
-		} else if pkg.PackageManager == "script" {
-			script := script.NewScriptPackageState(m.Scriptdefs[pkg.Name])
-			installed, err := script.IsInstalled(pkg.Name, pkg.Arguments)
-			if err != nil {
-				return err
-			}
-			if !installed {
-				err = script.Install(pkg.Name)
-				if err != nil {
-					return err
-				}
 			}
 		}
 	}
+
 	return nil
 }
 
