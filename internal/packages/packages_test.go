@@ -194,8 +194,8 @@ func TestLoadMetapackage(t *testing.T) {
 	}
 
 	// Check the parsed metapackage details
-	if len(metapackage.Packages) != 16 {
-		t.Errorf("Expected 4 packages, got %d", len(metapackage.Packages))
+	if len(metapackage.Packages) != 8 {
+		t.Errorf("Expected 8 packages, got %d", len(metapackage.Packages))
 	}
 
 	if len(metapackage.Scriptdefs) != 2 {

@@ -57,6 +57,7 @@ func LoadMetapackageFile(file string) (*Metapackage, error) {
 	}
 
 	// Iterate through the root nodes
+
 	for _, node := range doc.Nodes {
 		switch node.Name.String() {
 		case "scriptdef":
@@ -67,7 +68,6 @@ func LoadMetapackageFile(file string) (*Metapackage, error) {
 			}
 			metapackage.Scriptdefs[scriptdef.Name] = *scriptdef
 		default:
-			pkg := &Package{}
 
 			// we know the node is a package manager because it's not a script or scriptdef
 			// so we can parse the first argument as the package manager name
@@ -122,8 +122,6 @@ func LoadMetapackageFile(file string) (*Metapackage, error) {
 					return nil, fmt.Errorf("unknown package manager: %s", packageManagerName)
 				}
 			}
-
-			metapackage.Packages = append(metapackage.Packages, *pkg)
 		}
 	}
 
