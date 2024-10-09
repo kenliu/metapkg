@@ -2,6 +2,7 @@ package engine
 
 import (
 	"fmt"
+	"github.com/kenliu/metapkg/internal/package_managers/brew"
 	"github.com/kenliu/metapkg/internal/package_managers/dnf"
 	"github.com/kenliu/metapkg/internal/package_managers/flatpak"
 	"github.com/kenliu/metapkg/internal/package_managers/script"
@@ -10,6 +11,13 @@ import (
 	"github.com/kenliu/metapkg/internal/package_managers"
 )
 
+// packageManagerFactory is a map of package manager names to their respective PackageState implementations
+var packageManagerFactory = map[string]func() package_managers.PackageState{
+	"dnf":     func() package_managers.PackageState { return &dnf.DnfPackageState{} },
+	"flatpak": func() package_managers.PackageState { return &flatpak.FlatpakPackageState{} },
+	"brew":    func() package_managers.PackageState { return &brew.BrewPackageState{} },
+}
+
 func InstallPackages(m *packages.Metapackage) error {
 	println("\nInstalling packages")
 	println("===================")
@@ -17,26 +25,33 @@ func InstallPackages(m *packages.Metapackage) error {
 	for _, pkg := range m.Packages {
 		var packageState package_managers.PackageState
 
-		switch pkg.PackageManager {
-		case "dnf":
-			packageState = &dnf.DnfPackageState{}
-		case "flatpak":
-			packageState = &flatpak.FlatpakPackageState{}
-		case "script":
+		if pkg.PackageManager == "script" {
 			packageState = script.NewScriptPackageState(m.Scriptdefs[pkg.Name])
-		default:
-			return fmt.Errorf("unsupported package manager: %s", pkg.PackageManager)
+		} else {
+			stateFactory, ok := packageManagerFactory[pkg.PackageManager]
+			if !ok {
+				return fmt.Errorf("unsupported package manager: %s", pkg.PackageManager)
+			}
+			packageState = stateFactory()
 		}
 
-		installed, err := packageState.IsInstalled(pkg.Name, pkg.Arguments)
-		if err != nil {
+		if err := handlePackage(packageState, pkg); err != nil {
 			return err
 		}
+	}
 
-		if !installed {
-			if err := packageState.Install(pkg.Name); err != nil {
-				return err
-			}
+	return nil
+}
+
+func handlePackage(packageState package_managers.PackageState, pkg packages.Package) error {
+	installed, err := packageState.IsInstalled(pkg.Name, pkg.Arguments)
+	if err != nil {
+		return err
+	}
+
+	if !installed {
+		if err := packageState.Install(pkg.Name); err != nil {
+			return err
 		}
 	}
 
