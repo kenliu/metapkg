@@ -86,7 +86,8 @@ jobs:
         CGO_ENABLED: "0"
         GOOS: ${{ matrix.goos }}
         GOARCH: ${{ matrix.goarch }}
-      run: go build -trimpath -o "dist/${BINARY}" ./cmd/metapkg
+      # The tag name (for example v0.2.0) becomes the version printed by `metapkg version`.
+      run: go build -trimpath -ldflags "-X main.version=${GITHUB_REF_NAME}" -o "dist/${BINARY}" ./cmd/metapkg
 
     - name: Checksum
       working-directory: dist
