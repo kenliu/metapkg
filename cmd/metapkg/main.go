@@ -21,7 +21,7 @@ var version = "dev"
 
 var cli struct {
 	Config  string `help:"Config file path" default:"metapkg.conf" type:"path"`
-	File    string `help:"Metapkg file to use" default:"metapkg.kdl" type:"path"`
+	File    string `help:"Metapkg file to use" short:"f" default:"metapkg.kdl" type:"path"`
 	DryRun  bool   `help:"Print what would change without executing any install commands" default:"false"`
 	Debug   bool   `help:"Print debug information" default:"false"`
 	Verbose bool   `help:"Print verbose information" default:"false"`
