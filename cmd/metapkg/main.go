@@ -21,18 +21,14 @@ var version = "dev"
 
 var cli struct {
 	Config  string `help:"Config file path" default:"metapkg.conf" type:"path"`
+	File    string `help:"Metapkg file to use" default:"metapkg.kdl" type:"path"`
 	DryRun  bool   `help:"Print what would change without executing any install commands" default:"false"`
 	Debug   bool   `help:"Print debug information" default:"false"`
 	Verbose bool   `help:"Print verbose information" default:"false"`
 	Quiet   bool   `help:"Suppress all output" default:"false"`
 
-	Install struct {
-		File string `help:"Metapkg file to use" default:"metapkg.kdl" type:"path"`
-	} `cmd help:"Install packages specified in metapkg.kdl"`
-
-	Outdated struct {
-		File string `help:"Metapkg file to use" default:"metapkg.kdl" type:"path"`
-	} `cmd help:"List outdated packages"`
+	Install  struct{} `cmd help:"Install packages specified in the metapkg file"`
+	Outdated struct{} `cmd help:"List outdated packages"`
 
 	Version struct{} `cmd help:"Print the version number of metapkg"`
 }
@@ -49,12 +45,12 @@ func main() {
 
 	switch ctx.Command() {
 	case "install":
-		if err := install(cli.Install.File, cli.DryRun); err != nil {
+		if err := install(cli.File, cli.DryRun); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 			os.Exit(1)
 		}
 	case "outdated":
-		if err := outdated(cli.Outdated.File); err != nil {
+		if err := outdated(cli.File); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 			os.Exit(1)
 		}
