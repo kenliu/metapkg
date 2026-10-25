@@ -1,6 +1,6 @@
 module github.com/kenliu/metapkg
 
-go 1.23
+go 1.27.3
 
 require (
 	github.com/alecthomas/kong v0.8.1

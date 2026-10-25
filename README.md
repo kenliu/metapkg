@@ -28,7 +28,7 @@ Prebuilt binaries for Linux and macOS (`amd64` and `arm64`) are built on every p
 
 To build metapkg yourself instead, follow these steps to download the Go source and build it:
 
-1. Ensure you have Go installed on your system (version 1.23 or later is recommended).
+1. Ensure you have Go installed on your system (version 1.27 or later is recommended).
 
 2. Clone the repository:
    ```
