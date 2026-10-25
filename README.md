@@ -99,6 +99,17 @@ This will additionally install the `org.kde.filelight` package using the `flatpa
 
 This is just a simple example. You see a more complete example in the [sample_config.kdl](test-files/sample_config.kdl) file.
 
+### Choosing a metapkg file
+
+By default metapkg reads `metapkg.kdl` from the current directory. To use a different file, pass `--file` (or `-f`):
+
+```
+./bin/metapkg --file sample_essentials.kdl install
+./bin/metapkg -f ~/setups/laptop.kdl --dry-run install
+```
+
+`--file` is a global option, so it works with every command (`install`, `outdated`) and can be written before or after the command name: `metapkg install --file sample_essentials.kdl` is equivalent.
+
 ### Dry run
 
 To see what `install` would do without changing anything, pass `--dry-run`. Only read-only checks are run (for example `dpkg-query` or `snap list`); no install command is executed.
