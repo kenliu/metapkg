@@ -66,15 +66,21 @@ Then, run the following command to install the packages:
 ./bin/metapkg install
 ```
 
-This will install the `cowsay`, `sl`, and `htop` packages using the default package manager for your system.
+This will install the `cowsay`, `sl`, and `htop` packages using the default package manager for your system. The default is chosen from the operating system:
+
+| Operating system                              | Default package manager |
+| --------------------------------------------- | ----------------------- |
+| Ubuntu, Debian, and derivatives (Mint, Pop!_OS) | `apt`                 |
+| Fedora, RHEL, and derivatives (Rocky, Alma)   | `dnf`                   |
+| macOS                                         | `brew`                  |
 
 Currently, metapkg supports the following package managers:
 
+- `apt`
 - `dnf`
 - `flatpak`
 - `brew`
 - `snap` (coming soon)
-- `apt` (coming soon)
 
 If you want to use a different package manager to install a package, you can specify the package manager and any additional arguments as follows:
 
