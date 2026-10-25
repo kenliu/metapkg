@@ -8,6 +8,7 @@ import (
 	"github.com/kenliu/metapkg/internal/package_managers/dnf"
 	"github.com/kenliu/metapkg/internal/package_managers/flatpak"
 	"github.com/kenliu/metapkg/internal/package_managers/script"
+	"github.com/kenliu/metapkg/internal/package_managers/snap"
 
 	"github.com/kenliu/metapkg/internal/package_managers"
 	"github.com/kenliu/metapkg/internal/packages"
@@ -19,6 +20,7 @@ var packageManagerFactory = map[string]func() package_managers.PackageState{
 	"apt":     func() package_managers.PackageState { return &apt.AptPackageState{} },
 	"flatpak": func() package_managers.PackageState { return &flatpak.FlatpakPackageState{} },
 	"brew":    func() package_managers.PackageState { return &brew.BrewPackageState{} },
+	"snap":    func() package_managers.PackageState { return &snap.SnapPackageState{} },
 }
 
 func InstallPackages(m *packages.Metapackage) error {
