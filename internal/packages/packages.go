@@ -126,6 +126,13 @@ func LoadMetapackageFile(file string) (*Metapackage, error) {
 						return nil, fmt.Errorf("error parsing brew: %w", err)
 					}
 					metapackage.Packages = append(metapackage.Packages, *pkg)
+				case "snap":
+					println("found snap node")
+					pkg, err := parseSnap(node)
+					if err != nil {
+						return nil, fmt.Errorf("error parsing snap: %w", err)
+					}
+					metapackage.Packages = append(metapackage.Packages, *pkg)
 				default:
 					println("unknown package manager: %s", packageManagerName)
 					return nil, fmt.Errorf("unknown package manager: %s", packageManagerName)
@@ -162,6 +169,14 @@ func parseFlatpak(node *document.Node) (*Package, error) {
 func parseBrew(node *document.Node) (*Package, error) {
 	pkg := &Package{}
 	pkg.PackageManager = "brew"
+	pkg.Name = node.Name.String()
+	return pkg, nil
+}
+
+// parse a "snap" package manager node
+func parseSnap(node *document.Node) (*Package, error) {
+	pkg := &Package{}
+	pkg.PackageManager = "snap"
 	pkg.Name = node.Name.String()
 	return pkg, nil
 }

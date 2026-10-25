@@ -82,7 +82,7 @@ Currently, metapkg supports the following package managers:
 - `dnf`
 - `flatpak`
 - `brew`
-- `snap` (coming soon)
+- `snap`
 
 If you want to use a different package manager to install a package, you can specify the package manager and any additional arguments as follows:
 

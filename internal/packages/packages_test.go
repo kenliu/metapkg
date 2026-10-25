@@ -95,6 +95,29 @@ foo "flatpak"
 	}
 }
 
+func TestParseSnap(t *testing.T) {
+	kdlString := `
+foo "snap"
+`
+	doc, err := kdl.Parse(strings.NewReader(kdlString))
+	if err != nil {
+		t.Fatalf("Failed to parse KDL: %v", err)
+	}
+
+	pkg, err := parseSnap(doc.Nodes[0])
+	if err != nil {
+		t.Fatalf("parseSnap returned an error: %v", err)
+	}
+
+	if pkg.Name != "foo" {
+		t.Errorf("Expected package name 'foo', got '%s'", pkg.Name)
+	}
+
+	if pkg.PackageManager != "snap" {
+		t.Errorf("Expected package manager 'snap', got '%s'", pkg.PackageManager)
+	}
+}
+
 func TestParseScript(t *testing.T) {
 	// Define a small KDL snippet
 	kdlString := `
