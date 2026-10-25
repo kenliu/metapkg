@@ -1,4 +1,4 @@
-	package main
+package main
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ type Config struct {
 
 var cli struct {
 	Config  string `help:"Config file path" default:"metapkg.conf" type:"path"`
-	DryRun  bool   `help:"Print commands without executing" default:"false"`
+	DryRun  bool   `help:"Print what would change without executing any install commands" default:"false"`
 	Debug   bool   `help:"Print debug information" default:"false"`
 	Verbose bool   `help:"Print verbose information" default:"false"`
 	Quiet   bool   `help:"Suppress all output" default:"false"`
@@ -44,7 +44,7 @@ func main() {
 
 	switch ctx.Command() {
 	case "install":
-		if err := install(cli.Install.File); err != nil {
+		if err := install(cli.Install.File, cli.DryRun); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 			os.Exit(1)
 		}
@@ -58,10 +58,13 @@ func main() {
 	}
 }
 
-func install(file string) error {
+func install(file string, dryRun bool) error {
 	metapackage, err := packages.LoadMetapackageFile(file)
 	if err != nil {
 		return fmt.Errorf("error loading metapkg file: %w", err)
+	}
+	if dryRun {
+		return engine.DryRunInstall(metapackage, os.Stdout)
 	}
 	return engine.InstallPackages(metapackage)
 }

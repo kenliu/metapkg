@@ -20,3 +20,23 @@ type PackageState interface {
 	Install(name string) error
 }
 
+// InstallCommander is an optional interface for a PackageState that installs
+// a package by running a single command. InstallCommand returns that command
+// (the program followed by its arguments) without running it, so a dry run
+// can report what Install would do. Install must build its command from
+// InstallCommand so the reported and executed commands cannot drift apart.
+type InstallCommander interface {
+	// InstallCommand returns the command Install runs for the given package
+	InstallCommand(name string) []string
+}
+
+// InstallDescriber is an optional interface for a PackageState whose Install
+// does more than run the single command reported by InstallCommand: for
+// example a conditional retry with different flags, or a generated shell
+// script. InstallDescription returns extra lines for the dry-run plan that
+// describe that behaviour, one entry per line.
+type InstallDescriber interface {
+	// InstallDescription returns lines describing what Install does for the
+	// given package beyond (or instead of) InstallCommand
+	InstallDescription(name string) []string
+}

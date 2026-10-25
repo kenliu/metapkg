@@ -97,6 +97,30 @@ This will additionally install the `org.kde.filelight` package using the `flatpa
 
 This is just a simple example. You see a more complete example in the [sample_config.kdl](test-files/sample_config.kdl) file.
 
+### Dry run
+
+To see what `install` would do without changing anything, pass `--dry-run`. Only read-only checks are run (for example `dpkg-query` or `snap list`); no install command is executed.
+
+```
+./bin/metapkg --dry-run install
+```
+
+The output lists each package in file order, followed by a summary:
+
+```
+Dry run: no changes will be made
+================================
+[skip] curl (apt): already installed
+[install] cowsay (apt): would run: sudo apt-get install -y cowsay
+[install] starship (snap): would run: sudo snap install starship
+    may retry with: sudo snap install --classic starship (if snap reports the snap requires classic confinement)
+[install] vivaldi (script): would run:
+    sudo dnf config-manager --add-repo https://repo.vivaldi.com/archive/vivaldi-fedora.repo
+
+Summary: 3 to install, 1 already installed
+Dry run: nothing was changed
+```
+
 ## 🤝 Contributing
 
 Contributions are welcome! If you have ideas for improvements or have found a bug, please feel free to open an issue or submit a pull request.

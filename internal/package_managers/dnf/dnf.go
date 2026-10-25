@@ -57,15 +57,21 @@ func (d *DnfPackageState) IsOutdated(name string, arguments []string) (bool, err
 	return false, nil
 }
 
+// InstallCommand returns the command Install runs, without running it.
+func (d *DnfPackageState) InstallCommand(name string) []string {
+	return []string{"sudo", "dnf", "install", "-y", name}
+}
+
 func (d *DnfPackageState) Install(name string) error {
 	// execute the dnf command to install the specific package
 	// return the output of the command
 	// if there is an error, return the error
+	args := d.InstallCommand(name)
 
 	// log the command to be executed
-	fmt.Printf("Executing command: sudo dnf install %s\n", name)
+	fmt.Printf("Executing command: %s\n", strings.Join(args, " "))
 
-	cmd := exec.Command("sudo", append([]string{"dnf", "install", "-y", name})...)
+	cmd := exec.Command(args[0], args[1:]...)
 	var stdout, stderr strings.Builder
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr

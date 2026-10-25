@@ -57,8 +57,7 @@ func (s *ScriptPackageState) Install(name string) error {
 	//println("writing script contents:")
 	//println(strings.Join(s.Scriptdef.Commands, "\n"))
 
-	scriptContent := "#!/bin/bash\n\n" + strings.Join(s.Scriptdef.Commands, "\n")
-	if _, err := tmpfile.Write([]byte(scriptContent)); err != nil {
+	if _, err := tmpfile.Write([]byte(s.scriptContent())); err != nil {
 		return fmt.Errorf("error writing to temp file: %w", err)
 	}
 
@@ -93,6 +92,27 @@ func (s *ScriptPackageState) Install(name string) error {
 	}
 
 	return nil
+}
+
+// scriptContent returns the shell script Install writes to a temporary file
+// and executes: a shebang line followed by the scriptdef commands.
+func (s *ScriptPackageState) scriptContent() string {
+	return "#!/bin/bash\n\n" + strings.Join(s.Scriptdef.Commands, "\n")
+}
+
+// InstallDescription returns the commands the install script runs, one line
+// per entry, for display in a dry run. A scriptdef command may itself span
+// several lines (for example a heredoc), in which case each of its lines is
+// returned separately so the caller can indent them uniformly.
+func (s *ScriptPackageState) InstallDescription(name string) []string {
+	if len(s.Scriptdef.Commands) == 0 {
+		return []string{"(no commands found for scriptdef " + s.Scriptdef.Name + ")"}
+	}
+	var lines []string
+	for _, command := range s.Scriptdef.Commands {
+		lines = append(lines, strings.Split(command, "\n")...)
+	}
+	return lines
 }
 
 func (s *ScriptPackageState) IsOutdated(name string, arguments []string) (bool, error) {

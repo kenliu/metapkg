@@ -57,10 +57,16 @@ func (b *BrewPackageState) IsOutdated(name string, arguments []string) (bool, er
 	return strings.TrimSpace(stdoutStr) != "", nil
 }
 
-func (b *BrewPackageState) Install(name string) error {
-	fmt.Printf("Executing command: brew install %s\n", name)
+// InstallCommand returns the command Install runs, without running it.
+func (b *BrewPackageState) InstallCommand(name string) []string {
+	return []string{"brew", "install", name}
+}
 
-	cmd := exec.Command("brew", "install", name)
+func (b *BrewPackageState) Install(name string) error {
+	args := b.InstallCommand(name)
+	fmt.Printf("Executing command: %s\n", strings.Join(args, " "))
+
+	cmd := exec.Command(args[0], args[1:]...)
 	var stdout, stderr strings.Builder
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr

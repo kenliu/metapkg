@@ -1,6 +1,9 @@
 package apt
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestIsInstalledStatus(t *testing.T) {
 	tests := []struct {
@@ -23,6 +26,14 @@ func TestIsInstalledStatus(t *testing.T) {
 				t.Errorf("isInstalledStatus(%q) = %v, expected %v", tt.status, got, tt.expected)
 			}
 		})
+	}
+}
+
+func TestInstallCommand(t *testing.T) {
+	got := strings.Join((&AptPackageState{}).InstallCommand("curl"), " ")
+	expected := "sudo apt-get install -y curl"
+	if got != expected {
+		t.Errorf("InstallCommand(\"curl\") = %q, expected %q", got, expected)
 	}
 }
 
