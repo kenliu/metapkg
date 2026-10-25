@@ -149,8 +149,8 @@ func lookupKind(name string) (packageKind, error) {
 }
 
 // kindFromInfo reads the output of `brew info --json=v2` and decides whether
-// the package is a formula or a cask. If a name is both, the formula wins,
-// which is what `brew install <name>` does.
+// the package is a formula or a cask. A name that is both is an error, because
+// metapkg cannot tell which one the file means.
 func kindFromInfo(name string, data []byte) (packageKind, error) {
 	var info struct {
 		Formulae []json.RawMessage `json:"formulae"`
@@ -160,10 +160,13 @@ func kindFromInfo(name string, data []byte) (packageKind, error) {
 		return kindUnknown, fmt.Errorf("error reading brew info output for %q: %w", name, err)
 	}
 
+	isFormula, isCask := len(info.Formulae) > 0, len(info.Casks) > 0
 	switch {
-	case len(info.Formulae) > 0:
+	case isFormula && isCask:
+		return kindUnknown, fmt.Errorf("%q is ambiguous: it is both a Homebrew formula and a cask", name)
+	case isFormula:
 		return kindFormula, nil
-	case len(info.Casks) > 0:
+	case isCask:
 		return kindCask, nil
 	}
 	return kindUnknown, fmt.Errorf("%q is not a Homebrew formula or cask", name)

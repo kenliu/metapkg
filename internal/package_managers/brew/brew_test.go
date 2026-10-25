@@ -36,7 +36,7 @@ func TestKindFromInfo(t *testing.T) {
 	}{
 		{"formula", `{"formulae":[{"name":"bat"}],"casks":[]}`, kindFormula, false},
 		{"cask", `{"formulae":[],"casks":[{"token":"iterm2"}]}`, kindCask, false},
-		{"both prefers formula", `{"formulae":[{"name":"docker"}],"casks":[{"token":"docker"}]}`, kindFormula, false},
+		{"both is ambiguous", `{"formulae":[{"name":"docker"}],"casks":[{"token":"docker"}]}`, kindUnknown, true},
 		{"neither", `{"formulae":[],"casks":[]}`, kindUnknown, true},
 		{"invalid json", `not json`, kindUnknown, true},
 	}
