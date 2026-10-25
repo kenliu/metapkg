@@ -1,6 +1,30 @@
 package snap
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
+
+func TestInstallCommand(t *testing.T) {
+	s := &SnapPackageState{}
+
+	got := strings.Join(s.InstallCommand("starship"), " ")
+	expected := "sudo snap install starship"
+	if got != expected {
+		t.Errorf("InstallCommand(\"starship\") = %q, expected %q", got, expected)
+	}
+
+	got = strings.Join(classicInstallCommand("starship"), " ")
+	expected = "sudo snap install --classic starship"
+	if got != expected {
+		t.Errorf("classicInstallCommand(\"starship\") = %q, expected %q", got, expected)
+	}
+
+	description := s.InstallDescription("starship")
+	if len(description) != 1 || !strings.Contains(description[0], expected) || !strings.Contains(description[0], "may retry") {
+		t.Errorf("InstallDescription(\"starship\") = %q, expected one line mentioning a retry with %q", description, expected)
+	}
+}
 
 func TestIsNotInstalledMessage(t *testing.T) {
 	tests := []struct {

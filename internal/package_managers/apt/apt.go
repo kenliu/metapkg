@@ -90,11 +90,18 @@ func isOutdatedOutput(output string, name string) bool {
 	return false
 }
 
-func (a *AptPackageState) Install(name string) error {
-	// log the command to be executed
-	fmt.Printf("Executing command: sudo apt-get install -y %s\n", name)
+// InstallCommand returns the command Install runs, without running it.
+func (a *AptPackageState) InstallCommand(name string) []string {
+	return []string{"sudo", "apt-get", "install", "-y", name}
+}
 
-	cmd := exec.Command("sudo", "apt-get", "install", "-y", name)
+func (a *AptPackageState) Install(name string) error {
+	args := a.InstallCommand(name)
+
+	// log the command to be executed
+	fmt.Printf("Executing command: %s\n", strings.Join(args, " "))
+
+	cmd := exec.Command(args[0], args[1:]...)
 	// Prevent debconf from trying to prompt on a terminal we are not forwarding
 	cmd.Env = append(cmd.Environ(), "DEBIAN_FRONTEND=noninteractive")
 	var stdout, stderr strings.Builder

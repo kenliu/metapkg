@@ -120,10 +120,12 @@ func isOutdatedOutput(output string, name string) bool {
 // retry once with --classic, printing what happened so the user is aware that
 // the snap runs outside the usual sandbox.
 func (s *SnapPackageState) Install(name string) error {
-	// log the command to be executed
-	fmt.Printf("Executing command: sudo snap install %s\n", name)
+	args := s.InstallCommand(name)
 
-	cmd := exec.Command("sudo", "snap", "install", name)
+	// log the command to be executed
+	fmt.Printf("Executing command: %s\n", strings.Join(args, " "))
+
+	cmd := exec.Command(args[0], args[1:]...)
 	var stdout, stderr strings.Builder
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
@@ -136,10 +138,11 @@ func (s *SnapPackageState) Install(name string) error {
 
 	if err != nil {
 		if requiresClassic(stderrStr) {
+			classicArgs := classicInstallCommand(name)
 			fmt.Printf("Snap %q requires classic confinement. Retrying with --classic...\n", name)
-			fmt.Printf("Executing command: sudo snap install --classic %s\n", name)
+			fmt.Printf("Executing command: %s\n", strings.Join(classicArgs, " "))
 
-			cmd = exec.Command("sudo", "snap", "install", "--classic", name)
+			cmd = exec.Command(classicArgs[0], classicArgs[1:]...)
 			var classicStdout, classicStderr strings.Builder
 			cmd.Stdout = &classicStdout
 			cmd.Stderr = &classicStderr
@@ -156,6 +159,25 @@ func (s *SnapPackageState) Install(name string) error {
 		return fmt.Errorf("error installing package: %w\nstdout: %s\nstderr: %s", err, stdoutStr, stderrStr)
 	}
 	return nil
+}
+
+// InstallCommand returns the command Install runs first, without running it.
+func (s *SnapPackageState) InstallCommand(name string) []string {
+	return []string{"sudo", "snap", "install", name}
+}
+
+// classicInstallCommand returns the command Install retries with when snap
+// reports that the snap requires classic confinement.
+func classicInstallCommand(name string) []string {
+	return []string{"sudo", "snap", "install", "--classic", name}
+}
+
+// InstallDescription describes the conditional --classic retry for a dry run.
+func (s *SnapPackageState) InstallDescription(name string) []string {
+	return []string{
+		fmt.Sprintf("may retry with: %s (if snap reports the snap requires classic confinement)",
+			strings.Join(classicInstallCommand(name), " ")),
+	}
 }
 
 // requiresClassic reports whether the stderr output of "snap install <name>"

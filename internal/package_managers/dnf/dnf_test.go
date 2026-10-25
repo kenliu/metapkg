@@ -3,6 +3,7 @@ package dnf
 import (
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 )
 
@@ -80,6 +81,14 @@ func mockCmd(command string, args ...string) *exec.Cmd {
 //		})
 //	}
 //}
+
+func TestInstallCommand(t *testing.T) {
+	got := strings.Join((&DnfPackageState{}).InstallCommand("fzf"), " ")
+	expected := "sudo dnf install -y fzf"
+	if got != expected {
+		t.Errorf("InstallCommand(\"fzf\") = %q, expected %q", got, expected)
+	}
+}
 
 // TestHelperProcess isn't a real test. It's used to mock exec.Command in the tests above.
 func TestHelperProcess(t *testing.T) {
