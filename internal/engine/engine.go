@@ -2,18 +2,21 @@ package engine
 
 import (
 	"fmt"
+
+	"github.com/kenliu/metapkg/internal/package_managers/apt"
 	"github.com/kenliu/metapkg/internal/package_managers/brew"
 	"github.com/kenliu/metapkg/internal/package_managers/dnf"
 	"github.com/kenliu/metapkg/internal/package_managers/flatpak"
 	"github.com/kenliu/metapkg/internal/package_managers/script"
 
-	"github.com/kenliu/metapkg/internal/packages"
 	"github.com/kenliu/metapkg/internal/package_managers"
+	"github.com/kenliu/metapkg/internal/packages"
 )
 
 // packageManagerFactory is a map of package manager names to their respective PackageState implementations
 var packageManagerFactory = map[string]func() package_managers.PackageState{
 	"dnf":     func() package_managers.PackageState { return &dnf.DnfPackageState{} },
+	"apt":     func() package_managers.PackageState { return &apt.AptPackageState{} },
 	"flatpak": func() package_managers.PackageState { return &flatpak.FlatpakPackageState{} },
 	"brew":    func() package_managers.PackageState { return &brew.BrewPackageState{} },
 }

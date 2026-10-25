@@ -8,6 +8,8 @@ import (
 	"github.com/sblinch/kdl-go/document"
 )
 
+// DEFAULT_PACKAGE_MANAGER is the fallback package manager used when the
+// operating system cannot be identified. See DefaultPackageManager.
 // TODO: make this configurable
 const DEFAULT_PACKAGE_MANAGER = "dnf"
 
@@ -103,6 +105,13 @@ func LoadMetapackageFile(file string) (*Metapackage, error) {
 						return nil, fmt.Errorf("error parsing dnf: %w", err)
 					}
 					metapackage.Packages = append(metapackage.Packages, *pkg)
+				case "apt":
+					println("found apt node")
+					pkg, err := parseApt(node)
+					if err != nil {
+						return nil, fmt.Errorf("error parsing apt: %w", err)
+					}
+					metapackage.Packages = append(metapackage.Packages, *pkg)
 				case "flatpak":
 					println("found flatpak node")
 					pkg, err := parseFlatpak(node)
@@ -135,6 +144,13 @@ func parseDnf(node *document.Node) (*Package, error) {
 	return pkg, nil
 }
 
+func parseApt(node *document.Node) (*Package, error) {
+	pkg := &Package{}
+	pkg.PackageManager = "apt"
+	pkg.Name = node.Name.String()
+	return pkg, nil
+}
+
 func parseFlatpak(node *document.Node) (*Package, error) {
 	pkg := &Package{}
 	pkg.PackageManager = "flatpak"
@@ -162,8 +178,8 @@ func parseDefaultPackageManager(node *document.Node) (*Package, error) {
 	//the default package manager with no options is used
 	pkg := &Package{}
 
-	// The package manager is not specified, so the default is used
-	pkg.PackageManager = DEFAULT_PACKAGE_MANAGER
+	// The package manager is not specified, so the default for this operating system is used
+	pkg.PackageManager = DefaultPackageManager()
 	pkg.Name = node.String()
 
 	return pkg, nil

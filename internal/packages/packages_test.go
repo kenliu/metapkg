@@ -40,6 +40,29 @@ foo "dnf"
 	}
 }
 
+func TestParseApt(t *testing.T) {
+	kdlString := `
+foo "apt"
+`
+	doc, err := kdl.Parse(strings.NewReader(kdlString))
+	if err != nil {
+		t.Fatalf("Failed to parse KDL: %v", err)
+	}
+
+	pkg, err := parseApt(doc.Nodes[0])
+	if err != nil {
+		t.Fatalf("parseApt returned an error: %v", err)
+	}
+
+	if pkg.Name != "foo" {
+		t.Errorf("Expected package name 'foo', got '%s'", pkg.Name)
+	}
+
+	if pkg.PackageManager != "apt" {
+		t.Errorf("Expected package manager 'apt', got '%s'", pkg.PackageManager)
+	}
+}
+
 func TestParseFlatpak(t *testing.T) {
 	// Define a small KDL snippet
 	kdlString := `
@@ -182,8 +205,10 @@ foo
 		t.Errorf("Expected package name 'example', got '%s'", pkg.Name)
 	}
 
-	if pkg.PackageManager != "dnf" {
-		t.Errorf("Expected package manager 'dnf', got '%s'", pkg.PackageManager)
+	// The default depends on the operating system the test runs on
+	expected := DefaultPackageManager()
+	if pkg.PackageManager != expected {
+		t.Errorf("Expected package manager '%s', got '%s'", expected, pkg.PackageManager)
 	}
 }
 
