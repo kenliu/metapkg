@@ -24,7 +24,9 @@ To keep things simple, metapkg does not:
 
 ## 🚀 Getting Started
 
-Prebuilt binaries for Linux and macOS (`amd64` and `arm64`) are built on every push to `main`. Download them from the artifacts of the latest successful [Build binaries](https://github.com/kenliu/metapkg/actions/workflows/build-binaries.yml) workflow run (you need to be signed in to GitHub to download artifacts). Each binary comes with a `.sha256` checksum file. Artifacts are kept for 30 days, and you need to run `chmod +x` on the binary after unzipping it.
+Released versions of metapkg for Linux and macOS (`amd64` and `arm64`) can be downloaded from the [Releases](https://github.com/kenliu/metapkg/releases) page. Download the binary for your system (for example `metapkg_linux_amd64`), optionally check it against the `SHA256SUMS` file with `sha256sum -c SHA256SUMS --ignore-missing`, and run `chmod +x` on it.
+
+Prebuilt binaries for Linux and macOS (`amd64` and `arm64`) are also built on every push to `main`. Download them from the artifacts of the latest successful [Build binaries](https://github.com/kenliu/metapkg/actions/workflows/build-binaries.yml) workflow run (you need to be signed in to GitHub to download artifacts). Each binary comes with a `.sha256` checksum file. Artifacts are kept for 30 days, and you need to run `chmod +x` on the binary after unzipping it.
 
 To build metapkg yourself instead, follow these steps to download the Go source and build it:
 
@@ -120,6 +122,19 @@ Dry run: no changes will be made
 Summary: 3 to install, 1 already installed
 Dry run: nothing was changed
 ```
+
+## 🏷️ Releases
+
+To cut a release, a maintainer pushes a version tag from `main`:
+
+```
+git checkout main
+git pull
+git tag v0.2.0
+git push origin v0.2.0
+```
+
+The [Release](https://github.com/kenliu/metapkg/actions/workflows/release.yml) workflow then tests and builds that commit and publishes a GitHub Release with the binaries and a `SHA256SUMS` file. Tags must look like `v1.2.3` and point to a commit on `main`; tags with a suffix such as `v0.2.0-rc.1` are published as prereleases.
 
 ## 🤝 Contributing
 
