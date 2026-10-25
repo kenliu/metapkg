@@ -134,6 +134,11 @@ Summary: 3 to install, 1 already installed
 Dry run: nothing was changed
 ```
 
+## 📚 Documentation
+
+- [Quickstart](doc/quickstart.md): install metapkg, write a file, preview and run it
+- [Config reference](doc/config-reference.md): the file format, package managers, and script packages
+
 ## 🏷️ Releases
 
 To cut a release, a maintainer pushes a version tag from `main`:
