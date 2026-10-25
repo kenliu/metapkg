@@ -14,6 +14,11 @@ type Config struct {
 	DefaultPackageManager string `kdl:"default_package_manager"`
 }
 
+// version is the version reported by the version command. It is set at build
+// time by the release workflow with -ldflags "-X main.version=<tag>". Builds
+// that do not set it report "dev".
+var version = "dev"
+
 var cli struct {
 	Config  string `help:"Config file path" default:"metapkg.conf" type:"path"`
 	DryRun  bool   `help:"Print commands without executing" default:"false"`
@@ -54,7 +59,7 @@ func main() {
 			os.Exit(1)
 		}
 	case "version":
-		fmt.Println("metapkg v0.1")
+		fmt.Println("metapkg " + version)
 	}
 }
 
