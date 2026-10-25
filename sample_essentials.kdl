@@ -2,16 +2,16 @@
 // Packages are installed in the order listed.
 
 // Essential fonts
-fonts-ibm-plex "apt"
-fonts-firacode "apt"
+fonts-ibm-plex
+fonts-firacode
 
 // Essential CLI tools
-bat "apt"
-curl "apt"
-eza "apt"
-fzf "apt"
-zoxide "apt"
-zsh "apt"
+bat
+curl
+eza
+fzf
+zoxide
+zsh
 
 // starship is installed from the snap store.
 starship "snap"
