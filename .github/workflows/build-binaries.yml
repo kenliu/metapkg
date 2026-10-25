@@ -1,0 +1,77 @@
+# This workflow builds metapkg binaries for Linux and macOS on every push to main
+# (including merged pull requests) and uploads them as workflow run artifacts.
+
+name: Build binaries
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version-file: go.mod
+
+    - name: Test
+      run: go test ./...
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - goos: linux
+          goarch: amd64
+        - goos: linux
+          goarch: arm64
+        - goos: darwin
+          goarch: amd64
+        - goos: darwin
+          goarch: arm64
+    env:
+      BINARY: metapkg_${{ matrix.goos }}_${{ matrix.goarch }}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version-file: go.mod
+
+    - name: Build
+      env:
+        CGO_ENABLED: "0"
+        GOOS: ${{ matrix.goos }}
+        GOARCH: ${{ matrix.goarch }}
+      run: go build -trimpath -o "dist/${BINARY}" ./cmd/metapkg
+
+    - name: Checksum
+      working-directory: dist
+      run: sha256sum "${BINARY}" > "${BINARY}.sha256"
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.BINARY }}
+        path: |
+          dist/${{ env.BINARY }}
+          dist/${{ env.BINARY }}.sha256
+        if-no-files-found: error
+        retention-days: 30

@@ -24,7 +24,9 @@ To keep things simple, metapkg does not:
 
 ## 🚀 Getting Started
 
-To get started with metapkg, follow these steps to download the Go source and build it:
+Prebuilt binaries for Linux and macOS (`amd64` and `arm64`) are built on every push to `main`. Download them from the artifacts of the latest successful [Build binaries](https://github.com/kenliu/metapkg/actions/workflows/build-binaries.yml) workflow run (you need to be signed in to GitHub to download artifacts). Each binary comes with a `.sha256` checksum file. Artifacts are kept for 30 days, and you need to run `chmod +x` on the binary after unzipping it.
+
+To build metapkg yourself instead, follow these steps to download the Go source and build it:
 
 1. Ensure you have Go installed on your system (version 1.23 or later is recommended).
 

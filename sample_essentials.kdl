@@ -1,0 +1,23 @@
+// Packages that are basically essential for a working system (Ubuntu).
+// Packages are installed in the order listed.
+
+// Essential fonts
+fonts-ibm-plex "apt"
+fonts-firacode "apt"
+
+// Essential CLI tools
+bat "apt"
+curl "apt"
+eza "apt"
+fzf "apt"
+zoxide "apt"
+zsh "apt"
+
+// metapkg has no snap package manager yet, so starship is installed with a
+// script package. The "starship" package below runs the matching scriptdef.
+// It counts as installed when a "starship" executable is on the PATH.
+starship "script"
+
+scriptdef "starship" {
+  "sudo snap install starship"
+}
