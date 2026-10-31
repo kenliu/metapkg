@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/sblinch/kdl-go"
-	"github.com/sblinch/kdl-go/document"
+	"github.com/njreid/gokdl2"
+	"github.com/njreid/gokdl2/document"
 )
 
 // DEFAULT_PACKAGE_MANAGER is the fallback package manager used when the
@@ -43,10 +43,10 @@ func LoadMetapackageFile(file string) (*Metapackage, error) {
 	}
 	defer f.Close()
 
-	// Parse the KDL document
-	doc, err := kdl.Parse(f)
+	// Parse the configuration as KDL v2 without falling back to v1.
+	doc, err := kdl.ParseWithOptions(f, kdl.ParseOptions{Version: kdl.ParseVersionV2})
 	if err != nil {
-		return nil, fmt.Errorf("error parsing KDL: %w", err)
+		return nil, fmt.Errorf("error parsing KDL v2: %w", err)
 	}
 
 	// TODO handle some basic validation of the document
@@ -61,7 +61,7 @@ func LoadMetapackageFile(file string) (*Metapackage, error) {
 	// Iterate through the root nodes
 
 	for _, node := range doc.Nodes {
-		switch node.Name.String() {
+		switch node.Name.ValueString() {
 		case "scriptdef":
 			println("found scriptdef node")
 			scriptdef, err := parseScriptdef(node)
@@ -147,21 +147,21 @@ func LoadMetapackageFile(file string) (*Metapackage, error) {
 func parseDnf(node *document.Node) (*Package, error) {
 	pkg := &Package{}
 	pkg.PackageManager = "dnf"
-	pkg.Name = node.Name.String()
+	pkg.Name = node.Name.ValueString()
 	return pkg, nil
 }
 
 func parseApt(node *document.Node) (*Package, error) {
 	pkg := &Package{}
 	pkg.PackageManager = "apt"
-	pkg.Name = node.Name.String()
+	pkg.Name = node.Name.ValueString()
 	return pkg, nil
 }
 
 func parseFlatpak(node *document.Node) (*Package, error) {
 	pkg := &Package{}
 	pkg.PackageManager = "flatpak"
-	pkg.Name = node.Name.String()
+	pkg.Name = node.Name.ValueString()
 	return pkg, nil
 }
 
@@ -169,7 +169,7 @@ func parseFlatpak(node *document.Node) (*Package, error) {
 func parseBrew(node *document.Node) (*Package, error) {
 	pkg := &Package{}
 	pkg.PackageManager = "brew"
-	pkg.Name = node.Name.String()
+	pkg.Name = node.Name.ValueString()
 	return pkg, nil
 }
 
@@ -177,14 +177,14 @@ func parseBrew(node *document.Node) (*Package, error) {
 func parseSnap(node *document.Node) (*Package, error) {
 	pkg := &Package{}
 	pkg.PackageManager = "snap"
-	pkg.Name = node.Name.String()
+	pkg.Name = node.Name.ValueString()
 	return pkg, nil
 }
 
 func parseScript(node *document.Node) (*Package, error) {
 	pkg := &Package{}
 	pkg.PackageManager = "script"
-	pkg.Name = node.Name.String()
+	pkg.Name = node.Name.ValueString()
 	return pkg, nil
 }
 
@@ -195,7 +195,7 @@ func parseDefaultPackageManager(node *document.Node) (*Package, error) {
 
 	// The package manager is not specified, so the default for this operating system is used
 	pkg.PackageManager = DefaultPackageManager()
-	pkg.Name = node.String()
+	pkg.Name = node.Name.ValueString()
 
 	return pkg, nil
 }
@@ -205,7 +205,7 @@ func parseScriptdef(node *document.Node) (*Scriptdef, error) {
 		Name: node.Arguments[0].ValueString(),
 	}
 	for _, child := range node.Children {
-		if child.Name.String() == "cmd" {
+		if child.Name.ValueString() == "cmd" {
 			if len(child.Arguments) > 0 {
 				scriptdef.Commands = append(scriptdef.Commands, child.Arguments[0].ValueString())
 			}

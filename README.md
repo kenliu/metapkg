@@ -56,6 +56,8 @@ Now you can run metapkg by executing `./bin/metapkg` from the project directory,
 
 ## 📘 Usage
 
+Configuration files use [KDL v2](https://kdl.dev/), parsed with [gokdl2](https://github.com/njreid/gokdl2).
+
 To get started, create a metapkg file called `metapkg.kdl` in the same directory as the `metapkg` executable. You can use this simple example metapkg file to get started:
 
 ```
@@ -92,10 +94,24 @@ If you want to use a different package manager to install a package, you can spe
 cowsay
 sl
 htop
-org.kde.filelight "flatpak" "flathub"
+org.kde.filelight flatpak flathub
 ```
 
 This will additionally install the `org.kde.filelight` package using the `flatpak` package manager with the `flathub` remote.
+
+KDL v2 accepts both bare string arguments (such as `flatpak`) and quoted strings. When migrating a KDL v1 file, replace raw strings such as `r#"text"#` with `#"text"#`. Multiline strings require triple quotes, with the opening and closing delimiters on separate lines:
+
+```kdl
+scriptdef example {
+    cmd #"""
+        echo "hello"
+        echo "world"
+        """#
+}
+example script
+```
+
+KDL v1-only syntax is rejected.
 
 This is just a simple example. You see a more complete example in the [sample_config.kdl](test-files/sample_config.kdl) file.
 

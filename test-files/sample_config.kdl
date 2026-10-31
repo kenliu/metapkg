@@ -4,7 +4,7 @@
 // followed by the name of the package manager to install the package with.
 // Packages will be installed in the order specified in this file.
 //
-// Note that in KDL file format, the first string argument after a node name is always enclosed in quotes.
+// KDL v2 allows bare string arguments such as dnf; quoted strings are also valid.
 fzf "dnf"
 
 // The name of the package manager is optional. If the package manager is not specified then the default
@@ -59,8 +59,9 @@ scriptdef "gcloud" {
     // Here is an example of a multiline shell command taken from:
     // https://cloud.google.com/sdk/docs/install#rpm
 
-    // TODO discuss raw multi-line strings from kdl
-    r#"sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo << EOM
+    // KDL v2 raw multiline strings preserve shell quotes, backslashes, and line breaks.
+    #"""
+sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo << EOM
 [google-cloud-cli]
 name=Google Cloud CLI
 baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el9-x86_64
@@ -68,7 +69,8 @@ enabled=1
 gpgcheck=1
 repo_gpgcheck=0
 gpgkey=https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-EOM"#
+EOM
+"""#
 
     "sudo dnf install google-cloud-cli"
 }
