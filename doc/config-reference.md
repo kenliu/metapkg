@@ -1,6 +1,6 @@
 # Config reference
 
-A metapkg file is written in [KDL](https://kdl.dev). By default it is called `metapkg.kdl`; use `--file` to choose another name. Comments start with `//`.
+A metapkg file is written in [KDL v2](https://kdl.dev). By default it is called `metapkg.kdl`; use `--file` to choose another name. Comments start with `//`.
 
 Packages are installed in the order they appear in the file.
 
@@ -67,13 +67,15 @@ A command can span several lines. Use a KDL raw string for this, which keeps quo
 
 ```
 scriptdef "gcloud" {
-  r#"sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo << EOM
+  #"""
+sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo << EOM
 [google-cloud-cli]
 name=Google Cloud CLI
 baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el9-x86_64
 enabled=1
 gpgcheck=1
-EOM"#
+EOM
+"""#
   "sudo dnf install -y google-cloud-cli"
 }
 ```
